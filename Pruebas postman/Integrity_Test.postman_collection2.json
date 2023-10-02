@@ -833,38 +833,10 @@
 					"script": {
 						"exec": [
 							"",
-							"pm.test(\"Response status code is 200\", function () {",
-							"    pm.expect(pm.response.code).to.equal(200);",
+							"pm.test(\"Response status code is 403\", function () {",
+							"    pm.expect(pm.response.code).to.equal(403);",
 							"});",
-							"",
-							"",
-							"pm.test(\"Response has the required fields\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData).to.be.an('object');",
-							"    pm.expect(responseData.message).to.exist.and.to.be.a('string');",
-							"});",
-							"",
-							"",
-							"pm.test(\"Message is a non-empty string\", function () {",
-							"  const responseData = pm.response.json();",
-							"  ",
-							"  pm.expect(responseData).to.be.an('object');",
-							"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
-							"});",
-							"",
-							"",
-							"pm.test(\"Verify the message is the expected value\", function () {",
-							"    const expectedMessage = \"expected value\";",
-							"    const responseData = pm.response.json();",
-							"",
-							"    pm.expect(responseData.message).to.equal(expectedMessage);",
-							"});",
-							"",
-							"",
-							"pm.test(\"Response time is in acceptable range\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(500);",
-							"});"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -893,13 +865,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/post/5",
+					"raw": "{{baseUrl}}/post/4",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"post",
-						"5"
+						"4"
 					]
 				}
 			},
@@ -992,39 +964,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"",
-							"pm.test(\"Response status code is 200\", function () {",
-							"    pm.expect(pm.response.code).to.equal(200);",
+							"pm.test(\"Response status code is 403\", function () {",
+							"    pm.expect(pm.response.code).to.equal(403);",
 							"});",
-							"",
-							"",
-							"pm.test(\"Response has the required fields\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData).to.be.an('object');",
-							"    pm.expect(responseData.message).to.exist.and.to.be.a('string');",
-							"});",
-							"",
-							"",
-							"pm.test(\"Message is a non-empty string\", function () {",
-							"  const responseData = pm.response.json();",
-							"  ",
-							"  pm.expect(responseData).to.be.an('object');",
-							"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
-							"});",
-							"",
-							"",
-							"pm.test(\"Verify the message is the expected value\", function () {",
-							"    const expectedMessage = \"expected value\";",
-							"    const responseData = pm.response.json();",
-							"",
-							"    pm.expect(responseData.message).to.equal(expectedMessage);",
-							"});",
-							"",
-							"",
-							"pm.test(\"Response time is in acceptable range\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(500);",
-							"});"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -1053,13 +996,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/post/7",
+					"raw": "{{baseUrl}}/post/3",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"post",
-						"7"
+						"3"
 					]
 				}
 			},
@@ -1126,6 +1069,61 @@
 					"path": [
 						"unsec-post",
 						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Leer un post tampered",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/post/4",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post",
+						"4"
 					]
 				}
 			},
