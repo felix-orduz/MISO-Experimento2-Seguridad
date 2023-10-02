@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  traefik:
+    image: "traefik:v2.5"
+    container_name: "traefik"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "444:443"  # Puerto HTTPS
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+#      - "./traefik/traefik.toml:/traefik.toml"
+#      - "./traefik/acme.json:/acme.json"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`localhost`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.api.entrypoints=web"
+      - "traefik.http.routers.api.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$sG6tvPpF$$NZWn1uDYwkhKzFW9mUiyb0"
+
+  usuarios:
+    image: "alvarosalazar/arqu_agile-usuarios:0.1"
+    container_name: "usuarios-container"
+    ports:
+      - "8082:5000"
+    environment:
+      - FLASK_ENV=development  # Usar development para trabajar localmente
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.usuarios.rule=(Host(`localhost`) || Host(`miso.denkitronik.com`) || Host(`misoarq.denkitronik.com`)) && (\
+                                            PathPrefix(`/login`)||\
+                                            PathPrefix(`/register`)||\
+                                            PathPrefix(`/user/profile`)\
+					    )"
+      - "traefik.http.routers.usuarios.entrypoints=web"
+
+  posts:
+    image: "alvarosalazar/arqu_agile-posts:0.1"
+    container_name: "posts-container"
+    ports:
+      - "8081:5000"
+    environment:
+      - FLASK_ENV=development  # Usar development para trabajar localmente
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.posts.rule=(Host(`localhost`) || Host(`miso.denkitronik.com`) || Host(`misoarq.denkitronik.com`)) && (PathPrefix(`/post/{id:[0-9]+}`)||\
+                                                               PathPrefix(`/post`)||\
+                                                               PathPrefix(`/posts`)||\
+                                                               PathPrefix(`/unsec-post/{id:[0-9]+}`))"
+      - "traefik.http.routers.posts.entrypoints=web"
